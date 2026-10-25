@@ -65,23 +65,24 @@ export function formatResult({ text, sources }: SearchResult): string {
   return `${text}\n\nSources:\n${sources.map((s) => `- ${s.title}: ${s.url}`).join("\n")}`;
 }
 
+// A light model is enough: the calling model already wrote the query.
+const DEFAULT_MODEL = "gpt-6-luna";
+
 export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "web_search",
     label: "Web Search",
     description:
-      "Search the web with OpenAI's native web_search tool, using the current OpenAI model and its credentials. Returns an answer with source URLs.",
+      "Search the web with OpenAI's native web_search tool, using pi's OpenAI credentials. Returns an answer with source URLs.",
     promptSnippet: "web_search: search the web for current information",
     parameters: Type.Object({
       query: Type.String({ description: "What to search for" }),
     }),
     async execute(_id, { query }, signal, _onUpdate, ctx) {
-      const model = ctx.model as Model<Api> | undefined;
-      if (model?.api !== "openai-responses") {
-        throw new Error(
-          `web_search needs an OpenAI Responses model; current model is ${model ? `${model.provider}/${model.id}` : "unset"}`,
-        );
-      }
+      const id = process.env.PI_OPENAI_WEB_SEARCH_MODEL || DEFAULT_MODEL;
+      const model = ctx.modelRegistry.find("openai", id) as
+        Model<Api> | undefined;
+      if (!model) throw new Error(`OpenAI model not found: openai/${id}`);
       const auth = await ctx.modelRegistry.getApiKeyAndHeaders(model);
       if (!auth.ok) throw new Error(auth.error);
 
@@ -111,6 +112,7 @@ export default function (pi: ExtensionAPI) {
               { role: "user", content: [{ type: "input_text", text: query }] },
             ],
             tools: [{ type: "web_search" }],
+            tool_choice: { type: "web_search" },
             include: ["web_search_call.action.sources"],
             stream: true,
             store: false,

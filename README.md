@@ -2,7 +2,7 @@
 
 A [pi](https://pi.dev) extension that adds a `web_search` tool backed by OpenAI's native Responses API `web_search` tool.
 
-The tool sends a separate Responses request with the current OpenAI model and the credentials pi already holds for it (API key or Sign in with ChatGPT). No extra API key is needed. Searches count against the same account as the conversation.
+When the model calls `web_search`, the extension sends a separate Responses request that forces OpenAI's hosted `web_search` tool. It uses the credentials pi already holds for the `openai` provider (API key or Sign in with ChatGPT), so no extra API key is needed.
 
 ## Install
 
@@ -12,9 +12,9 @@ pi install npm:pi-openai-web-search
 
 ## Use
 
-Select a model whose API is `openai-responses` (for example the `openai` provider). The model can then call `web_search` with a `query`. The result is the answer text followed by its source URLs.
+Log in to the `openai` provider. The model can then call `web_search` with a `query`. The result is the answer text followed by its source URLs.
 
-With any other model the tool returns an error.
+Searches run on `openai/gpt-6-luna` regardless of the conversation model. Set `PI_OPENAI_WEB_SEARCH_MODEL` to use another `openai` model.
 
 ## Development
 
