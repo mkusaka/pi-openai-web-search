@@ -2,6 +2,14 @@
 
 Why `web_search` is a pi tool that sends its own Responses request, and how the search model was chosen.
 
+## Scope: OpenAI only
+
+This package supports only OpenAI's hosted `web_search` through pi's `openai` provider. Other providers are out of scope.
+
+- The goal is search with the OpenAI login pi already has, without an extra API key or service.
+- A small, single-provider extension is easy to read and audit in full. Multi-provider packages such as pi-web-search spend most of their code on per-provider request shapes. In pi-web-search's history, only two changes touched the plain OpenAI path; the rest were for Codex, Copilot, Azure, Grok and OpenCode.
+- Each provider's search has its own request shape, auth and quirks. Supporting another one means owning that code; a separate package does it better.
+
 ## Options
 
 OpenAI's Responses API has a hosted `web_search` tool. OpenAI runs the search on its side; the client only lists the tool in `tools`. There are two ways to give that to a pi agent.
