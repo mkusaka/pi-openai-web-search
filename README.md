@@ -16,6 +16,8 @@ Log in to the `openai` provider. The model can then call `web_search` with a `qu
 
 Searches run on `openai/gpt-6-luna` regardless of the conversation model. Set `PI_OPENAI_WEB_SEARCH_MODEL` to use another `openai` model.
 
+See [docs/design.md](docs/design.md) for why search runs as a separate request and how the model was chosen.
+
 ## Development
 
 ```sh

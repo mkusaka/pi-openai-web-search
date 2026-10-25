@@ -1,6 +1,6 @@
 {
   "name": "pi-openai-web-search",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "OpenAI Responses native web_search tool for the pi coding agent",
   "type": "module",
   "license": "MIT",
